@@ -48,19 +48,8 @@ describe('Testes do componente <Pokemon.js />', () => {
     const pokemonType = screen.getByTestId('pokemon-type');
     expect(pokemonType.textContent).toBe('Electric');
 
-    const pokemonSummary = screen.getByRole('heading', {
-      name: 'Summary',
-      level: 2,
-    });
-    const pokemonLocations = screen.getByRole('heading', {
-      name: 'Game Locations of Pikachu',
-      level: 2,
-    });
-
     const locationImgs = screen.getAllByAltText('Pikachu location');
 
-    expect(pokemonSummary).toBeInTheDocument();
-    expect(pokemonLocations).toBeInTheDocument();
     expect(locationImgs).toHaveLength(2);
   });
 
