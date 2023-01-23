@@ -6,6 +6,7 @@ import App from '../App';
 import renderWithRouter from '../renderWithRouter';
 
 // jest.mock('../pages/Pokedex');
+const type = 'pokemon-type';
 
 describe('Teste o componente <Pokedex.js />', () => {
   it('A página deve conter um h2 com o texto Encountered Pokémon', () => {
@@ -28,7 +29,7 @@ describe('Teste o componente <Pokedex.js />', () => {
     userEvent.click(nextBtn);
 
     const pokemonName = screen.getByText(/Charmander/i);
-    const pokemonType = screen.getByTestId('pokemon-type', { name: /Fire/i });
+    const pokemonType = screen.getByTestId(type, { name: /Fire/i });
     const pokemonWeight = screen.getByText(/average weight: 8\.5 kg/i);
 
     expect(pokemonName).toBeInTheDocument();
@@ -59,7 +60,7 @@ describe('Teste o componente <Pokedex.js />', () => {
     expect(filterBtn[6].textContent).toBe('Dragon');
 
     userEvent.click(filterBtn[1]);
-    const pokemonType = screen.getByTestId('pokemon-type', {
+    const pokemonType = screen.getByTestId(type, {
       name: /Fire/i,
     });
     expect(pokemonType.textContent).toBe(filterBtn[1].textContent);
@@ -73,7 +74,7 @@ describe('Teste o componente <Pokedex.js />', () => {
     userEvent.click(filterBtn[2]);
     const filteredType = filterBtn[2].textContent;
 
-    const pokemonType = screen.getByTestId('pokemon-type', { name: /Bug/i });
+    const pokemonType = screen.getByTestId(type, { name: /Bug/i });
     expect(pokemonType.textContent).toBe(filteredType);
     expect(removeFilter).toBeInTheDocument();
 
