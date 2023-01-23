@@ -40,13 +40,57 @@ describe('Testes do componente <Pokemon.js />', () => {
   });
 
   it('ao clicar no link de navegação do Pokémon, é feito o redirecionamento da aplicação para a página de detalhes de Pokémon', () => {
-    const { history } = renderWithRouter(<App />);
+    renderWithRouter(<App />);
 
     const detailsLink = screen.getByRole('link', { name: /more details/i });
     userEvent.click(detailsLink);
 
+    const pokemonType = screen.getByTestId('pokemon-type');
+    expect(pokemonType.textContent).toBe('Electric');
+
+    const pokemonSummary = screen.getByRole('heading', {
+      name: 'Summary',
+      level: 2,
+    });
+    const pokemonLocations = screen.getByRole('heading', {
+      name: 'Game Locations of Pikachu',
+      level: 2,
+    });
+
+    const locationImgs = screen.getAllByAltText('Pikachu location');
+
+    expect(pokemonSummary).toBeInTheDocument();
+    expect(pokemonLocations).toBeInTheDocument();
+    expect(locationImgs).toHaveLength(2);
+  });
+
+  it('A URL exibida no navegador muda para /pokemon/<id>, onde <id> é o id do Pokémon cujos detalhes se deseja ver', () => {
+    const { history } = renderWithRouter(<App />);
+
+    const detailsLink = screen.getByRole('link', { name: /more details/i });
+    userEvent.click(detailsLink);
     const { pathname } = history.location;
     const URL = '/pokemon/25';
-    expect(pathname).toBe(URL);
+
+    expect(pathname).toContain(URL);
+  });
+
+  it('Teste se existe um ícone de estrela nos Pokémon favoritados', () => {
+    renderWithRouter(<App />);
+    const detailsLink = screen.getByRole('link', { name: /more details/i });
+
+    userEvent.click(detailsLink);
+    const favoriteBtn = screen.getByRole('checkbox', {
+      name: /pokémon favoritado\?/i,
+    });
+
+    expect(favoriteBtn).toBeInTheDocument();
+
+    userEvent.click(favoriteBtn);
+
+    const favoriteImg = document.querySelector('.favorite-icon');
+    expect(favoriteImg).toBeInTheDocument();
+    expect(favoriteImg.src).toContain('/star-icon.svg');
+    expect(favoriteImg.alt).toBe('Pikachu is marked as favorite');
   });
 });
