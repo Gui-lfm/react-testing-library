@@ -1,9 +1,11 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-// import { Pokedex } from '../pages';
 import userEvent from '@testing-library/user-event';
+// import { Pokedex } from '../pages';
 import App from '../App';
 import renderWithRouter from '../renderWithRouter';
+
+// jest.mock('../pages/Pokedex');
 
 describe('Teste o componente <Pokedex.js />', () => {
   it('A página deve conter um h2 com o texto Encountered Pokémon', () => {
@@ -44,6 +46,7 @@ describe('Teste o componente <Pokedex.js />', () => {
 
   it('A Pokédex deve ter os botões de filtro', () => {
     renderWithRouter(<App />);
+
     const filterBtn = screen.getAllByTestId('pokemon-type-button');
     expect(filterBtn).toHaveLength(7);
 
@@ -55,23 +58,26 @@ describe('Teste o componente <Pokedex.js />', () => {
     expect(filterBtn[5].textContent).toBe('Normal');
     expect(filterBtn[6].textContent).toBe('Dragon');
 
-    userEvent.click(filterBtn[0]);
+    userEvent.click(filterBtn[1]);
     const pokemonType = screen.getByTestId('pokemon-type', {
-      name: /Electric/i,
+      name: /Fire/i,
     });
-    expect(pokemonType.textContent).toBe(filterBtn[0].textContent);
-
-    const removeFilter = screen.getByRole('button', { name: 'All' });
-
-    expect(removeFilter).toBeInTheDocument();
+    expect(pokemonType.textContent).toBe(filterBtn[1].textContent);
   });
 
   it('A Pokédex deve conter um botão para resetar o filtro:', () => {
     renderWithRouter(<App />);
+    const filterBtn = screen.getAllByTestId('pokemon-type-button');
     const removeFilter = screen.getByRole('button', { name: 'All' });
 
+    userEvent.click(filterBtn[2]);
+    const filteredType = filterBtn[2].textContent;
+
+    const pokemonType = screen.getByTestId('pokemon-type', { name: /Bug/i });
+    expect(pokemonType.textContent).toBe(filteredType);
     expect(removeFilter).toBeInTheDocument();
 
     userEvent.click(removeFilter);
+    expect(pokemonType.textContent).toBe('Electric');
   });
 });
